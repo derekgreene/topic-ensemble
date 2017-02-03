@@ -1,8 +1,13 @@
-topic-ensemblemodels/ensemble
+topic-ensemble
 ===============
 
-Ensemble topic modeling with matrix factorization
+This repository contains a Python reference implementation of methods for ensemble topic modeling with Non-negative Matrix Factorization (NMF).
 
+Details of these methods are described in the following paper (currently under review):
+
+	Stability of Topic Modeling via Matrix Factorization
+	Mark Belford, Brian MacNamee, Derek Greene.
+	
 ### Dependencies
 Tested with Python 2.7 and Python 3.5, and requiring the following packages, which are available via PIP:
 
@@ -21,7 +26,7 @@ The output will be sample.pkl, stored as a Joblib binary file. The identifiers o
 ##### Step 2. 
 Next, we generate a set of "base" topic models, which represent the members of the ensemble. We provide two different ways to do this.
 
-Firstly, we can generate a specified number of base topic models using NMF and random initialization (the "Basic Ensemble" approach). For instance, we can generate 20 models, each containing *k=4* topics, where each NMF run will execute for a maximum of 100 iterations. The models will be written to the directory 'models/base' as a number of separate Joblib files.models/base
+Firstly, we can generate a specified number of base topic models using NMF and random initialization (the "Basic Ensemble" approach). For instance, we can generate 20 models, each containing *k=4* topics, where each NMF run will execute for a maximum of 100 iterations. The models will be written to the directory 'models/base' as separate Joblib files.
 	
 	python generate-nmf.py sample.pkl -k 4 -r 20 --maxiters 100 -o models/base
 
@@ -30,16 +35,21 @@ Alternatively, we can use the "K-Fold" ensemble approach. For instance, to execu
 	python generate-kfold.py sample.pkl -k 4 -r 5 -f 10 --maxiters 100 -o models/base
 
 ##### Step 3. 
-The next step is to combine the base topic models using an ensemble approach, to produce a final ensemble model. Note that we specify all of the factor files from the base topic models to combine, along with the number of overall ensemble topics (here it is again *k=4*). The model will be written as a number of files to the directory 'models/ensemble'.
+The next step is to combine the base topic models using an ensemble approach, to produce a final ensemble model. Note that we specify all of the factor files from the base topic models to combine, along with the number of overall ensemble topics (here again we specify *k=4*). The model will be written as a number of files to the directory 'models/ensemble'.
 
 	python combine-nmf.py sample.pkl models/base/*factors*.pkl -k 4 -o models/ensemble
 
-We can display the top 10 terms in the topic descriptors for the final ensemble results:
+##### Browsing Results
+
+We can display the top 10 terms in the topic descriptors for the final ensemble results in tabular format:
 
 	python display-top-terms.py models/ensemble/ranks_ensemble_k04.pkl 
 
+Or using a line-by-line format:
 
-Similarly, we can display the identifiers of the top-ranked document for each topic:
+	python display-top-terms.py -l models/ensemble/ranks_ensemble_k04.pkl 
+
+Similarly, we can display the identifiers of the top-ranked documents for each topic:
 
 	python display-top-documents.py models/ensemble/factors_ensemble_k04.pkl 
 
