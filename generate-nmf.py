@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 """
-Applies randomly initialized NMF to the specified dataset.
+Applies randomly-initialized NMF to the specified dataset to generate an ensemble.
 
 Sample usage:
-python generate-nmf.py sample.pkl -k 4 -r 30 --maxiters 100 -o base-nmf
+python generate-nmf.py sample.pkl -k 4 -r 20 --maxiters 100 -o models/base
 """
 import os, sys, random
 import logging as log

@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 """
-python generate-kfold.py sample.pkl -f 10 -r 2 -k 4 --maxiters 100 -o folds-nmf
+Applies a K-Fold strategy with NNDSVD-initialized NMF to the specified dataset to generate an ensemble.
+
+Sample usage:
+python generate-kfold.py sample.pkl -k 4 -r 5 -f 10 --maxiters 100 -o models/base
 """
 import os, sys, random
 import logging as log
