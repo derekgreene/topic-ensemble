@@ -6,7 +6,7 @@ This repository contains a Python reference implementation of methods for ensemb
 Details of these methods are described in the following paper (currently under review):
 
 	Stability of Topic Modeling via Matrix Factorization
-	Mark Belford, Brian MacNamee, Derek Greene.
+	Mark Belford, Brian MacNamee, Derek Greene (2017)
 
 Draft pre-print: [https://arxiv.org/abs/1702.07186](https://arxiv.org/abs/1702.07186)
 
