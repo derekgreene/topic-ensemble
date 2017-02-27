@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 """
-Tool to parse a collection of documents, where each file is stored in a separate plain text file.
+Tool to parse a collection of documents, where each document is a single line in one or more text files.
 
 Sample usage:
-python parse-directory.py data/sample-text/ -o sample --tfidf --norm
+python parse-file.py data/sample.txt -o sample --tfidf --norm
 """
 import os, os.path, sys, codecs, re, unicodedata
 import logging as log
@@ -13,7 +13,7 @@ import text.util
 # --------------------------------------------------------------
 
 def main():
-	parser = OptionParser(usage="usage: %prog [options] dir1 dir2 ...")
+	parser = OptionParser(usage="usage: %prog [options] file1 file2 ...")
 	parser.add_option("-o", action="store", type="string", dest="prefix", help="output prefix for corpus files", default=None)
 	parser.add_option("--df", action="store", type="int", dest="min_df", help="minimum number of documents for a term to appear", default=20)
 	parser.add_option("--tfidf", action="store_true", dest="apply_tfidf", help="apply TF-IDF term weight to the document-term matrix")
@@ -23,55 +23,28 @@ def main():
 	parser.add_option('-d','--debug',type="int",help="Level of log output; 0 is less, 5 is all", default=3)
 	(options, args) = parser.parse_args()
 	if( len(args) < 1 ):
-		parser.error( "Must specify at least one directory" )	
+		parser.error( "Must specify at least one input file" )	
 	log.basicConfig(level=max(50 - (options.debug * 10), 10), format='%(message)s')
-	
-	# Find all relevant files in directories specified by user
-	filepaths = []
-	args.sort()
-	for in_path in args:
-		if os.path.isdir( in_path ):
-			log.info( "Searching %s for documents ..." % in_path )
-			for fpath in text.util.find_documents( in_path ):
-				filepaths.append( fpath )
-		else:
-			if in_path.startswith(".") or in_path.startswith("_"):
-				continue
-			filepaths.append( in_path )
-	log.info( "Found %d documents to parse" % len(filepaths) )
 
 	# Read the documents
-	log.info( "Reading documents ..." )
 	docs = []
 	short_documents = 0
 	doc_ids = []
-	label_count = {}
-	classes = {}
-	for filepath in filepaths:
-		# create the document ID
-		label = os.path.basename( os.path.dirname( filepath ).replace(" ", "_") )
-		doc_id = os.path.splitext( os.path.basename( filepath ) )[0]
-		if not doc_id.startswith(label):
-			doc_id = "%s_%s" % ( label, doc_id )
-		# read body text
-		log.debug( "Reading text from %s ..." % filepath )
-		body = text.util.read_text( filepath )
-		if len(body) < options.min_doc_length:
-			short_documents += 1
-			continue
-		docs.append(body)	
-		doc_ids.append(doc_id)	
-		if label not in classes:
-			classes[label] = set()
-			label_count[label] = 0
-		classes[label].add(doc_id)
-		label_count[label] += 1
+	for in_path in args:
+		file_count = 0
+		log.info( "Reading documents from %s, one per line ..." % in_path )
+		fin = codecs.open(in_path, 'r', encoding="utf8", errors='ignore')
+		for line in fin.readlines():
+			body = line.strip()
+			if len(body) < options.min_doc_length:
+				short_documents += 1
+				continue
+			doc_id = "%05d" % ( len(doc_ids) + 1 )
+			docs.append(body)	
+			doc_ids.append(doc_id)	
+			file_count += 1
+		log.info( "Kept %d documents from %s" % (file_count, in_path) )
 	log.info( "Kept %d documents. Skipped %d documents with length < %d" % ( len(docs), short_documents, options.min_doc_length ) )
-	if len(classes) < 2:
-		log.warning( "No ground truth available" )
-		classes = None
-	else:
-		log.info( "Ground truth: %d classes - %s" % ( len(classes), label_count ) )
 
 	# Convert the documents in TF-IDF vectors and filter stopwords
 	if options.stoplist_file is None:
@@ -91,7 +64,7 @@ def main():
 	if prefix is None:
 		prefix = "corpus"
 	log.info( "Saving corpus '%s'" % prefix )
-	text.util.save_corpus( prefix, X, terms, doc_ids, classes )
+	text.util.save_corpus( prefix, X, terms, doc_ids, None )
   
 # --------------------------------------------------------------
 
