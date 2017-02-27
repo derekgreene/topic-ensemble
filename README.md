@@ -25,7 +25,7 @@ Before applying topic modeling to a corpus, the first step is to pre-process the
 
 The output will be sample.pkl, stored as a Joblib binary file. The identifiers of the documents in the dataset correspond to the original text input filenames.
 
-Alternative, if all of your documents are stored in a single text file, with one document per line, the script 'parse-file.py' can be used:
+Alternatively, if all of your documents are stored in a text file, with one document per line, the script 'parse-file.py' can be used:
 
 	python parse-file.py data/sample.txt -o sample --tfidf --norm
 
