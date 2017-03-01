@@ -10,6 +10,8 @@ Details of these methods are described in the following paper (currently under r
 
 Draft pre-print: [https://arxiv.org/abs/1702.07186](https://arxiv.org/abs/1702.07186)
 
+Additional pre-processed datasets for use with this package [http://mlg.ucd.ie/files/datasets/stability-topic-datasets.zip](can be downloaded here) (179MB).
+
 ### Dependencies
 Tested with Python 3.5, and requiring the following packages, which are available via PIP:
 
