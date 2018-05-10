@@ -7,7 +7,7 @@ Details of these methods are described in the following paper:
 
 	Stability of Topic Modeling via Matrix Factorization
 	Mark Belford, Brian MacNamee, Derek Greene. Expert Systems with Applications (ESWA), 2018.
-	https://arxiv.org/abs/1702.07186
+	https://www.sciencedirect.com/science/article/pii/S0957417417305948
 
 Draft pre-print: [https://arxiv.org/abs/1702.07186](https://arxiv.org/abs/1702.07186)
 
