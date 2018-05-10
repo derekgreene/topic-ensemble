@@ -22,10 +22,12 @@ def main():
 	parser.add_option("--maxiters", action="store", type="int", dest="maxiter", help="maximum number of iterations", default=500)
 	parser.add_option("-o","--outdir", action="store", type="string", dest="dir_out", help="output directory (default is current directory)", default=None)
 	parser.add_option("-v", "--verbose", action="store_true", dest="verbose", help="display topic descriptors")
+	parser.add_option('-d','--debug',type="int",help="Level of log output; 0 is less, 5 is all", default=3)
 	(options, args) = parser.parse_args()
 	if( len(args) < 3 ):
 		parser.error( "Must specify corpus file and at least two base factor files" )
-	log.basicConfig(level=20, format='%(message)s')
+	log_level = max(50 - (options.debug * 10), 10)
+	log.basicConfig(level=log_level, format='%(message)s')
 
 	# Parse user-specified range for number of topics K
 	k = int(options.k)
@@ -69,7 +71,7 @@ def main():
 	# Merge the H factors to create the topic-term matrix
 	M = np.vstack( factors )
 	log.info( "Created topic-term matrix of size %dx%d" % M.shape )
-	log.info( "Matrix statistics: range=[%.2f,%.2f] mean=%.2f" % ( np.min(M), np.max(M), np.mean(M) ) )	
+	log.debug( "Matrix statistics: range=[%.2f,%.2f] mean=%.2f" % ( np.min(M), np.max(M), np.mean(M) ) )	
 
 	# NMF implementation
 	impl = unsupervised.nmf.SklNMF( max_iters = options.maxiter, init_strategy = "nndsvd" )
@@ -77,7 +79,7 @@ def main():
 	impl.apply( M, k )
 	ensemble_H = np.array( impl.H )
 	ensemble_W = np.array( impl.W )
-	log.info( "Generated %dx%d factor W and %dx%d factor H" % ( ensemble_W.shape[0], ensemble_W.shape[1], ensemble_H.shape[0], ensemble_H.shape[1] ) )
+	log.debug( "Generated %dx%d factor W and %dx%d factor H" % ( ensemble_W.shape[0], ensemble_W.shape[1], ensemble_H.shape[0], ensemble_H.shape[1] ) )
 	# Create term rankings for each topic
 	term_rankings = []
 	for topic_index in range(k):		

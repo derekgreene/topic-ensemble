@@ -28,7 +28,7 @@ def main():
 	if len(args) < 1:
 		parser.error( "Must specify at least one corpus file" )	
 	log_level = max(50 - (options.debug * 10), 10)
-	log.basicConfig(level=log_level, format='%(asctime)-18s %(levelname)-10s %(message)s', datefmt='%d/%m/%Y %H:%M',)
+	log.basicConfig(level=log_level, format='%(message)s')
 
 	if options.dir_out is None:
 		dir_out_base = os.getcwd()
@@ -86,6 +86,7 @@ def main():
 		# apply NMF
 		log.info("Applying NMF to matrix of size %d X %d ..." % ( S.shape[0], S.shape[1] ) ) 
 		impl.apply( S, options.k )
+		log.debug("Generated factors: W %s, H %s" % ( impl.W.shape, impl.H.shape ) )
 		# Get term rankings for each topic
 		term_rankings = []
 		for topic_index in range(options.k):		
