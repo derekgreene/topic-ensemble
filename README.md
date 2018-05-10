@@ -3,11 +3,10 @@ topic-ensemble
 
 This repository contains a Python reference implementation of methods for ensemble topic modeling with Non-negative Matrix Factorization (NMF).
 
-Details of these methods are described in the following paper: 
+Details of these methods are described in the following paper [[Link]](https://doi.org/10.1016/j.eswa.2017.08.047): 
 
-	Stability of Topic Modeling via Matrix Factorization
-	Mark Belford, Brian MacNamee, Derek Greene. Expert Systems with Applications (ESWA), 2018.
-	https://www.sciencedirect.com/science/article/pii/S0957417417305948
+	Belford, M., Mac Namee, B., & Greene, D. (2018). Stability of topic modeling via matrix factorization. 
+	Expert Systems with Applications, 91, 159-169.
 
 Draft pre-print: [https://arxiv.org/abs/1702.07186](https://arxiv.org/abs/1702.07186)
 
